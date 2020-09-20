@@ -1,0 +1,163 @@
+#include <string>
+#include <spdlog/spdlog.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "Buffer.h"
+#include "VertexArray.h"
+#include "Shader.h"
+#include "Texture.h"
+#include <glm/glm.hpp>
+#include "Camera.h"
+
+void  APIENTRY glDebugCallback(GLenum source, GLenum mType, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+void render_loop();
+
+int main() {
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+  GLFWwindow* window = glfwCreateWindow(1920, 1080, "Voxel Engine 0.1", nullptr, nullptr);
+  if (window == nullptr) {
+    printf("foking hell man...\n");
+    glfwTerminate();
+    return 0;
+  }
+
+  glfwSwapInterval(true); // vsync
+  glfwMakeContextCurrent(window);
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) printf("Failed to initialize GLAD :-(");
+
+  glViewport(0, 0, 1920, 1080);
+
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glDebugMessageCallback(glDebugCallback, nullptr);
+  glEnable(GL_DEPTH_TEST);
+
+  float vertices[] = {
+    //positons          /texture coords
+     0.5f,  0.5f, 0.0f,  1.0f, 1.0f,   // top right
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,   // bottom left
+    
+    -0.5f, -0.5f, 0.0f,  0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,  0.0f, 1.0f,   // top left
+     0.5f,  0.5f, 0.0f,  1.0f, 1.0f,   // top right
+  };
+  
+  Buffer vbo;
+  vbo.create();
+  vbo.init(sizeof(vertices), &vertices, GL_DYNAMIC_STORAGE_BIT);
+  VertexArray vao;
+  vao.create();
+  vao.addBuffer(vbo, BufferType::Vertex, 5*sizeof(float));
+  vao.addAttrib(0, 3, 0);
+  vao.addAttrib(1, 2, 3*sizeof(float));
+  
+  Shader empty_shader("../Shaders/empty.shader");
+
+  Texture texture;
+  texture.create();
+  texture.upload_from_path("../Textures/sample_wood_texture.png");
+  texture.set_param(GL_TEXTURE_WRAP_S, GL_CLAMP);
+  texture.set_param(GL_TEXTURE_WRAP_T, GL_CLAMP);
+  texture.set_param(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  texture.set_param(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  Camera cam(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+  glfwSetWindowUserPointer(window, &cam);
+  glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
+    Camera* tcam = (Camera*)glfwGetWindowUserPointer(window);
+    tcam->mouse_callback(window, xpos, ypos);
+  });
+
+  float time = glfwGetTime();
+  float dt;
+  glm::mat4 model(1);
+  while (!glfwWindowShouldClose(window)) {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    
+    dt = glfwGetTime() - time;
+    time = glfwGetTime();
+    
+    empty_shader.use();
+    empty_shader.setInt("diffuse", 0);
+    texture.bind(0);
+    vao.bind();
+
+    empty_shader.setMat4("model", model);
+    cam.check_input(window, dt);
+    
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+  }
+  glfwTerminate();
+  return 0;
+}
+
+void  APIENTRY glDebugCallback(GLenum source, GLenum mType, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+    std::string src;
+    switch (source) {
+    case GL_DEBUG_SOURCE_API:
+        src = "Windows";
+        break;
+    case GL_DEBUG_SOURCE_SHADER_COMPILER:
+        src = "Shader Compiler";
+        break;
+    case GL_DEBUG_SOURCE_THIRD_PARTY:
+        src = "Third Party";
+        break;
+    case GL_DEBUG_SOURCE_APPLICATION:
+        src = "Application";
+        break;
+    case GL_DEBUG_SOURCE_OTHER:
+        src = "Other";
+        break;
+    }
+
+    std::string type;
+    switch (mType) {
+    case GL_DEBUG_TYPE_ERROR:
+        type = "Error";
+        break;
+    case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+        type = "Deprecated Behavior";
+        break;
+    case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+        type = "Undefined Behavior";
+        break;
+    case GL_DEBUG_TYPE_PORTABILITY:
+        type = "Portability Error";
+        break;
+    case GL_DEBUG_TYPE_PERFORMANCE:
+        type = "Performance Error";
+        break;
+    case GL_DEBUG_TYPE_OTHER:
+        type = "Other Message";
+        break;
+    }
+
+    switch (severity) {
+    case GL_DEBUG_SEVERITY_NOTIFICATION:
+        spdlog::trace("GL NOTIFICATION - {} {}: {}", src, type, message);
+        break;
+    case GL_DEBUG_SEVERITY_LOW:
+        spdlog::warn("GL LOW - {} {}: {}", src, type, message);
+        break;
+    case GL_DEBUG_SEVERITY_MEDIUM:
+        spdlog::error("GL MEDIUM - {} {}: {}", src, type, message);
+        break;
+    case GL_DEBUG_SEVERITY_HIGH:
+        spdlog::critical("GL HIGH - {} {}: {}", src, type, message);
+        break;
+    }
+    return;
+}

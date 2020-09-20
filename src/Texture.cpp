@@ -1,0 +1,75 @@
+#include "Texture.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+Texture::~Texture() {
+  glDeleteTextures(1, &id);
+}
+
+void Texture::create(GLenum target) {
+  glCreateTextures(target, 1, &id);
+}
+
+void Texture::init(u32 width, u32 height, GLenum internal_format) {
+  glTextureStorage2D(id, 1, internal_format, width, height);
+}
+
+void Texture::update(BYTE* image_data, u32 width, u32 height) {
+  glTextureSubImage2D(id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+}
+
+void Texture::generate_mipmaps() {
+  glGenerateTextureMipmap(id);
+}
+
+void Texture::upload_from_path(const char* image_path) {
+  int width, height, channels;
+  BYTE* image_data = stbi_load(image_path, &width, &height, &channels, 4);
+  if (image_data) {
+    init(width, height, GL_RGBA);
+    update(image_data, width, height);
+    generate_mipmaps();
+    stbi_image_free(image_data);
+  } else {
+    printf("stbi_load FAILED\n");
+  }
+}
+
+void Texture::set_param(GLenum pname, GLint param) {
+  glTextureParameteri(id, pname, param);
+}
+
+void Texture::bind(u32 tex_unit_index) {
+  glBindTextureUnit(tex_unit_index, id);
+}
+
+
+//Texture3D
+
+Texture3D::~Texture3D() {
+  glDeleteTextures(1, &id);
+}
+
+void Texture3D::create(GLenum target) {
+  glCreateTextures(target, 1, &id);
+}
+
+void Texture3D::init(u32 levels, GLenum internal_format, u32 width, u32 height, u32 depth) {
+  glTextureStorage3D(id, levels, internal_format, width, height, depth);
+}
+
+void Texture3D::update(u32 level, u32 xoffset, u32 yoffset, u32 zoffset, u32 width, u32 height, u32 depth, GLenum format, BYTE* image_data) {
+  glTextureSubImage3D(id, level, xoffset, yoffset, zoffset, width, height, depth, format, GL_UNSIGNED_BYTE, image_data);
+}
+
+void Texture3D::generate_mipmaps() {
+  glGenerateTextureMipmap(id);
+}
+
+void Texture3D::set_param(GLenum pname, GLint param) {
+  glTextureParameteri(id, pname, param);
+}
+
+void Texture3D::bind(u32 tex_unit_index) {
+  glBindTextureUnit(tex_unit_index, id);
+}

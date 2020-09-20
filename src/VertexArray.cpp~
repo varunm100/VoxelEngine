@@ -1,0 +1,13 @@
+#include "VertexArray.h"
+
+void VertexArray::addBuffer(Buffer& buffer) {
+
+}
+
+void VertexArray::addAttrib(const u32 index, const u32 count, const u32 offset) {
+    glEnableVertexArrayAttrib(id, index);
+    glVertexArrayAttribFormat(id, index, count, GL_FLOAT, GL_FALSE, offset);
+    glVertexArrayAttribBinding(id, index, 0);
+}
+
+void VertexArray::bind() { glBindVertexArray(id); }

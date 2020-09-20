@@ -1,0 +1,17 @@
+#include "Common.h"
+#include "Buffer.h"
+#include "Shader.h"
+#include "VertexArray.h"
+
+struct World {
+  Shader shader;
+  VertexArray vao;
+  Buffer vbo;
+    
+  World();
+  ~World() { }
+
+  void init();
+  void update_mesh();
+  void render();
+};

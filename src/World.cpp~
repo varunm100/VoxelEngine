@@ -1,0 +1,43 @@
+#include "World.h"
+#include "stb_image.h"
+
+#define MAX_WORLD_SIZE sizeof(float)*5
+
+World::World() {
+}
+
+void World::init_textures() {
+  textures.create(GL_TEXTURE_2D_ARRAY);
+  int width, height, channels;
+  BYTE* image_data = stbi_load("./textures/", &width, &height, &channels, 4);
+  if (image_data) {
+    textures.init(3,             //no. mipmaps
+		  GL_RGBA,       //internal format
+		  width, height, //width, height
+		  1);            //number of elements
+  }
+
+  textures.set_param(GL_TEXTURE_WRAP_S, GL_CLAMP);
+  textures.set_param(GL_TEXTURE_WRAP_T, GL_CLAMP);
+  textures.set_param(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  textures.set_param(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  textures.update(0,
+		  0, 0, 0,
+		  width, height, 1,
+		  GL_RGBA,
+		  image_data);
+}
+
+void World::init() {
+  vao.create();
+  vbo.create();
+  shader.create("../Shaders/empty.shader");
+
+  vao.addAttrib(0, 3, 0);
+  vao.addAttrib(1, 2, 3*sizeof(float));
+  vao.addBuffer(vbo, BufferType::Vertex, 5*sizeof(float));
+
+  vbo.init(MAX_WORLD_SIZE, nullptr, GL_DYNAMIC_STORAGE_BIT);
+  init_textures();
+}
