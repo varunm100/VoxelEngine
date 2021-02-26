@@ -7,10 +7,7 @@ set(SOURCES_DIR ${PROJECT_SOURCE_DIR}/src)
 include_directories(VoxelEngine ${SOURCES_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/include/vendor)
-
-find_package(glfw3 REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(spdlog REQUIRED)
+link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 set(SOURCE_FILES
   ${SOURCES_DIR}/glad.c
@@ -24,6 +21,7 @@ set(SOURCE_FILES
   ${SOURCES_DIR}/World.cpp
   )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(VoxelEngine ${SOURCE_FILES})
-target_link_libraries(VoxelEngine glfw OpenGL spdlog ${CMAKE_DL_LIBS})
+target_link_libraries(VoxelEngine glfw3 spdlogd ${CMAKE_DL_LIBS})
 

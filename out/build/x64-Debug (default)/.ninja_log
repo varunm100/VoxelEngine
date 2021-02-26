@@ -1,0 +1,22 @@
+# ninja log v5
+8	226	636077101	CMakeFiles/VoxelEngine.dir/src/VertexArray.cpp.obj	2667fb5b27a97b92
+4	226	636077101	CMakeFiles/VoxelEngine.dir/src/Buffer.cpp.obj	5d08c482c5f198cd
+19	259	636077101	CMakeFiles/VoxelEngine.dir/src/Texture.cpp.obj	8a7fe4e546071885
+1	342	636077101	CMakeFiles/VoxelEngine.dir/src/glad.c.obj	cc30aed43997b222
+11	467	636077161	CMakeFiles/VoxelEngine.dir/src/Camera.cpp.obj	7f62ae7df13512a2
+8	551	636077161	CMakeFiles/VoxelEngine.dir/src/World.cpp.obj	c7c51678d69d8f47
+5	568	636077161	CMakeFiles/VoxelEngine.dir/src/Shader.cpp.obj	51a8a499c78c7eee
+0	1759	636077162	CMakeFiles/VoxelEngine.dir/src/main.cpp.obj	e71dad0a353ca2fb
+1	496	636077292	VoxelEngine.exe	1667d4eada3bd7fa
+1	1824	636077454	CMakeFiles/VoxelEngine.dir/src/main.cpp.obj	e71dad0a353ca2fb
+1824	2068	636077455	VoxelEngine.exe	1667d4eada3bd7fa
+2	626	636077519	CMakeFiles/VoxelEngine.dir/src/World.cpp.obj	c7c51678d69d8f47
+626	795	636077519	VoxelEngine.exe	1667d4eada3bd7fa
+2	679	636077692	CMakeFiles/VoxelEngine.dir/src/Shader.cpp.obj	51a8a499c78c7eee
+679	864	636077692	VoxelEngine.exe	1667d4eada3bd7fa
+1	712	636077833	CMakeFiles/VoxelEngine.dir/src/Shader.cpp.obj	51a8a499c78c7eee
+712	877	636077834	VoxelEngine.exe	1667d4eada3bd7fa
+8	687	636078153	CMakeFiles/VoxelEngine.dir/src/World.cpp.obj	c7c51678d69d8f47
+1	697	636078153	CMakeFiles/VoxelEngine.dir/src/Shader.cpp.obj	51a8a499c78c7eee
+4	1813	636078154	CMakeFiles/VoxelEngine.dir/src/main.cpp.obj	e71dad0a353ca2fb
+1813	2060	636078154	VoxelEngine.exe	1667d4eada3bd7fa

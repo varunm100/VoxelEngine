@@ -8,7 +8,7 @@ World::World() {
 void World::init_textures() {
   textures.create(GL_TEXTURE_2D_ARRAY);
   int width, height, channels;
-  BYTE* image_data = stbi_load("../Textures/sample_wood_texture.png", &width, &height, &channels, 4);
+  BYTE* image_data = stbi_load("../../../Textures/sample_wood_texture.png", &width, &height, &channels, 4);
   stbi_set_flip_vertically_on_load(true);
   BYTE* image_data2 = stbi_load("../Textures/sample_grass_texture.jpg", &width, &height, &channels, 4);
   BYTE* image_data3 = stbi_load("../Textures/sample_stone_texture.jpeg", &width, &height, &channels, 4);
@@ -78,11 +78,7 @@ void World::init() {
   }
 
   vao.create();
-  for (auto &c : world) {
-    c.vbo.create();
-    c.ibo.create();
-  }
-
+  vbo.create();
   shader.create("../Shaders/empty.shader");
 
   vao.addAttrib(0, 3, offsetof(Vert, pos));

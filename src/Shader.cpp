@@ -58,6 +58,7 @@ void Shader::create(const char* location) {
   glCompileShader(shaders[0]);
   glCompileShader(shaders[1]);
   glGetShaderiv(shaders[0], GL_COMPILE_STATUS, &shaders[2]);
+
   if (!(shaders[2])) {
     glGetShaderInfoLog(shaders[0], 512, nullptr, infoLog);
     printf("Vertex Shader Compilation Failed: %s\n", infoLog);
@@ -75,7 +76,7 @@ void Shader::create(const char* location) {
   glGetProgramiv(program, GL_LINK_STATUS, &shaders[2]);
   if (!(shaders[2])) {
     glGetProgramInfoLog(program, 512, nullptr, infoLog);
-    printf("Linking Shader Failed: %s\n", infoLog);
+    printf("Linking Shader Failed: \n%s", infoLog);
   }
   glDeleteShader(shaders[0]);
   glDeleteShader(shaders[1]);

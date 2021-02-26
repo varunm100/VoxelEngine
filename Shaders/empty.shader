@@ -17,7 +17,6 @@ out float texture_index;
 uniform mat4 model;
 
 void main() {
-     gl_Position = projection * view * model * vec4(position, 1.0f);
      tex_coord = _tex_coord;
      texture_index = _texture_index;
 }

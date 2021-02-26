@@ -20,16 +20,16 @@ int main() {
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
   glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-  GLFWwindow* window = glfwCreateWindow(1920, 1080, "Voxel Engine 0.1", nullptr, nullptr);
+  GLFWwindow* window = glfwCreateWindow(1920, 1080, "Voxel Engine", nullptr, nullptr);
   if (window == nullptr) {
-    printf("foking hell man...\n");
+    printf("could not glfwCreateWindow()...\n");
     glfwTerminate();
     return 0;
   }
 
   glfwSwapInterval(true); // vsync
   glfwMakeContextCurrent(window);
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) printf("Failed to initialize GLAD :-(");
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) printf("Failed to initialize GLAD :-( \n");
 
   glViewport(0, 0, 1920, 1080);
 
