@@ -1,0 +1,13 @@
+#include "Common.h"
+#define CHUNK_SIZE 64
+#define CHUNK_AREA CHUNK_SIZE*CHUNK_SIZE
+#define CHUNK_VOLUME CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE
+#define MAX_HEIGHT 256
+#define WORLD_SLICE CHUNK_AREA*MAX_HEIGHT
+
+enum BlockType {
+  AIR = 0,
+  WOOD = 1,
+  GRASS = 2,
+  STONE = 3,
+};
